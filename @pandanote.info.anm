@@ -1,0 +1,11 @@
+@インスタントクリッピング
+--track0:Xc,-2000,2000,0
+--track1:Yc,-2000,2000,0
+xc=obj.track0
+yc=obj.track1
+obj.setoption("drawtarget","tempbuffer",obj.w,obj.h)
+obj.draw(obj.x+obj.ox-xc,obj.y+obj.oy-yc)
+obj.copybuffer("obj","tmp")
+obj.setoption("drawtarget","framebuffer")
+debug_print(string.format("obj.w=%d,obj.h=%d,obj.x=%d,obj.y=%d,obj.cx = %d, obj.cy = %d",obj.w,obj.h,obj.x,obj.y,obj.cx,obj.cy))
+obj.draw(-obj.x+xc+obj.cx,-obj.y+yc+obj.cy)
