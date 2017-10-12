@@ -3,6 +3,7 @@
 --track1:Yc,-2000,2000,0
 xc=obj.track0
 yc=obj.track1
+obj.effect()
 obj.setoption("drawtarget","tempbuffer",obj.w,obj.h)
 obj.draw(obj.x+obj.ox-xc,obj.y+obj.oy-yc)
 obj.copybuffer("obj","tmp")
