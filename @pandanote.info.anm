@@ -10,3 +10,72 @@ obj.copybuffer("obj","tmp")
 obj.setoption("drawtarget","framebuffer")
 --debug_print(string.format("obj.w=%d,obj.h=%d,obj.x=%d,obj.y=%d,obj.cx = %d, obj.cy = %d",obj.w,obj.h,obj.x,obj.y,obj.cx,obj.cy))
 obj.draw(-obj.x+xc,-obj.y+yc)
+@画面外から入退場
+--track0:イン,0,200,0.5
+--track1:アウト,0,200,0.5
+--track2:入射角,-180,180,0
+--track3:出射角,-180,180,180
+fadein = obj.track0
+fadeout = obj.track1
+indeg = obj.track2
+outdeg = obj.track3
+
+function out_of_bounds(wx,hy,inrad,fadeinfactor)
+	local ly
+	local le
+	local ox
+	local oy
+	ly = hy/math.sin(inrad)
+	le = wx/math.cos(inrad)
+	if (ly < le) then
+		oy = hy*fadeinfactor
+		ox = oy/math.tan(inrad)
+		return ox,oy
+	else
+		ox = wx*fadeinfactor
+		oy = ox*math.tan(inrad)
+		return ox,oy
+	end
+end
+
+function fade(indeg,fadeinfactor)
+    local fx
+    local fy
+    local inrad
+    fx = 0
+    fy = 0
+	local cx
+	local cy
+	cx = obj.x-obj.cx
+	cy = obj.y-obj.cy
+    inrad = indeg/180*math.pi
+    if (indeg == -180) then
+	fx = -((obj.screen_w+obj.w)/2.0+cx)*fadeinfactor
+    elseif (indeg < -90) then
+	fx,fy = out_of_bounds(-((obj.screen_w+obj.w)/2.0+cx),-((obj.screen_h+obj.h)/2.0+cy),inrad,fadeinfactor)
+    elseif (indeg == -90) then
+	fy = -((obj.screen_h+obj.h)/2.0+cy)*fadeinfactor
+    elseif (indeg < 0) then
+	fx,fy = out_of_bounds((obj.screen_w+obj.w)/2.0-cx,-((obj.screen_h+obj.h)/2.0+cy),inrad,fadeinfactor)
+    elseif (indeg == 0) then
+    	fx = ((obj.screen_w+obj.w)/2.0-cx)*fadeinfactor
+    elseif (indeg < 90) then
+	fx,fy = out_of_bounds((obj.screen_w+obj.w)/2.0-cx,(obj.screen_h+obj.h)/2.0-cy,inrad,fadeinfactor)
+    elseif (indeg == 90) then
+	fy = ((obj.screen_h+obj.h)/2.0-cy)*fadeinfactor
+    elseif (indeg < 180) then
+	fx,fy = out_of_bounds(-((obj.screen_w+obj.w)/2.0+cx),(obj.screen_h+obj.h)/2.0-cy,inrad,fadeinfactor)
+    elseif (indeg == 180) then
+	fx = -((obj.screen_w+obj.w)/2.0+cx)*fadeinfactor
+    end
+    return fx,fy
+end
+
+if (obj.time < fadein) then
+    fadeinfactor = (fadein-obj.time)/fadein
+    debug_print(string.format("%d,%d",obj.ox,obj.cx))
+    obj.ox,obj.oy = fade(indeg,fadeinfactor)
+elseif (obj.time > obj.totaltime-fadeout) then
+    fadeoutfactor = (obj.time-obj.totaltime+fadeout)/fadeout
+    obj.ox,obj.oy = fade(outdeg,fadeoutfactor)
+end
