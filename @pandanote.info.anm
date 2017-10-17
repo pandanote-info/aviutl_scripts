@@ -13,8 +13,8 @@ obj.draw(-obj.x+xc,-obj.y+yc)
 @‰æ–ÊŠO‚©‚ç“ü‘Şê
 --track0:ƒCƒ“,0,200,0.5
 --track1:ƒAƒEƒg,0,200,0.5
---track2:“üËŠp,-180,180,0
---track3:oËŠp,-180,180,180
+--track2:“üêŠp,-180,180,0
+--track3:‘ŞêŠp,-180,180,180
 fadein = obj.track0
 fadeout = obj.track1
 indeg = obj.track2
